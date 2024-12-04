@@ -3,9 +3,9 @@ import axios from 'axios';
 const BASE_URL = 'http://localhost:8080/precos';
 
 const PricesAPI = {
-  createPrice: async ({id, tempoInicial, tempoAdicional, valorInicial, valorAdicional}: {id: number, tempoInicial: number, tempoAdicional: number, valorInicial: number, valorAdicional: number}) => {
+  createPrice: async ({tempoInicial, tempoAdicional, valorInicial, valorAdicional}: {tempoInicial: number, tempoAdicional: number, valorInicial: number, valorAdicional: number}) => {
     try {
-      const response = await axios.post(BASE_URL, {id, tempoInicial, tempoAdicional, valorInicial, valorAdicional});
+      const response = await axios.post(BASE_URL, {tempoInicial, tempoAdicional, valorInicial, valorAdicional});
       return response.data;
     } catch (error) {
       console.error('Error creating price:', error);
