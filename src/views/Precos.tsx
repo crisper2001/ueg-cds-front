@@ -19,6 +19,24 @@ export default function Precos() {
 		fetchPrecos();
 	}, []);
 
+	const handleAddPreco = async () => {
+    try {
+      const precoData = {
+        tempoInicial: 0,
+        tempoAdicional: 0,
+        valorInicial: 0,
+        valorAdicional: 0,
+      };
+      const response = await PricesAPI.createPrice(precoData);
+      if (response) {
+				console.log('Preco criado com sucesso:', response);
+        fetchPrecos();
+      }
+    } catch (error) {
+      console.error('Error creating preco:', error);
+    }
+  };
+
 	return (
 		<div className="flex flex-col gap-4">
 			<table className="table w-full border-2 border-base-200">
@@ -45,11 +63,10 @@ export default function Precos() {
 			</table>
 
 			<div className="flex justify-end">
-				<button className="btn btn-primary text-white">
+				<button className="btn btn-primary text-white" onClick={handleAddPreco}>
 					+ Adicionar Preço
 				</button>
 			</div>
 		</div>
 	);
 }
-
