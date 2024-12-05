@@ -3,9 +3,9 @@ import axios from 'axios';
 const BASE_URL = 'http://localhost:8080/vagas';
 
 const VagasAPI = {
-  createVaga: async ({id, numero, localizacaoHorizontal, localizacaoVertical}: {id: number, numero: number, localizacaoHorizontal: number, localizacaoVertical: number}) => {
+  createVaga: async ({numero, locHorizontal, locVertical}: {numero: number, locHorizontal: number, locVertical: number}) => {
     try {
-      const response = await axios.post(BASE_URL, {id, numero, localizacaoHorizontal, localizacaoVertical});
+      const response = await axios.post(BASE_URL, {numero, locHorizontal, locVertical});
       return response.data;
     } catch (error) {
       console.error('Error creating vaga:', error);
@@ -23,9 +23,9 @@ const VagasAPI = {
     }
   },
 
-  updateVaga: async ({id, numero, localizacaoHorizontal, localizacaoVertical}: {id: number, numero: number, localizacaoHorizontal: number, localizacaoVertical: number}) => {
+  updateVaga: async ({id, numero, locHorizontal, locVertical}: {id: number, numero: number, locHorizontal: number, locVertical: number}) => {
     try {
-      const response = await axios.put(`${BASE_URL}/${id}`, {id, numero, localizacaoHorizontal, localizacaoVertical});
+      const response = await axios.put(`${BASE_URL}/${id}`, {id, numero, locHorizontal, locVertical});
       return response.data;
     } catch (error) {
       console.error('Error updating vaga:', error);
