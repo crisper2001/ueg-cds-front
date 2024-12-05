@@ -21,30 +21,29 @@ export default function Funcionarios() {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<table className="table w-full border-2 border-base-200">
-				<thead>
-					<tr className="bg-base-200">
-						<th>ID</th>
-						<th>Nome</th>
-						<th>E-mail</th>
-					</tr>
-				</thead>
-				<tbody>
-					{users.map((user) => (
-						<tr key={user.id}>
-							<td>{user.id}</td>
-							<td>{user.nome}</td>
-							<td>{user.email}</td>
+			{users.length > 0 ? (
+				<table className="table w-full border-2 border-base-200">
+					<thead>
+						<tr className="bg-base-200">
+							<th>ID</th>
+							<th>Nome</th>
+							<th>E-mail</th>
 						</tr>
-					))}
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						{users.map((user) => (
+							<tr key={user.id}>
+								<td>{user.id}</td>
+								<td>{user.nome}</td>
+								<td>{user.email}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			) : (
+				<p className="text-lg text-center">Nenhum funcionário encontrado.</p>
+			)}
 
-			<div className="flex justify-end">
-				<button className="btn btn-primary text-white">
-					+ Adicionar Funcionário
-				</button>
-			</div>
 		</div>
 	);
 }
