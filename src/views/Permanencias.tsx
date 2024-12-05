@@ -69,18 +69,18 @@ export default function Permanencias() {
 
 	const handleAddPermanencia = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		if (dataHoraEntrada === undefined || dataHoraSaida === undefined || placaVeiculo === undefined || vagaId === undefined || funcionarioId === undefined || precoId === undefined) {
+		if (dataHoraEntrada === undefined || placaVeiculo === undefined || vagaId === undefined || funcionarioId === undefined || precoId === undefined) {
 			alert("Preencha todos os campos");
 			return;
 		}
 		try {
 			const permanenciaData = {
 				dataHoraEntrada,
-				dataHoraSaida,
 				placaVeiculo,
 				vagaId,
 				funcionarioId,
 				precoId,
+				dataHoraSaida: dataHoraSaida ?? undefined,
 			};
 			const response = await PermanenciasAPI.createPermanencia(permanenciaData);
 			if (response) {
@@ -110,7 +110,7 @@ export default function Permanencias() {
 							<tr key={permanencia.id}>
 								<td>{permanencia.id}</td>
 								<td>{new Date(permanencia.dataHoraEntrada).toLocaleString('pt-BR', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
-								<td>{new Date(permanencia.dataHoraSaida).toLocaleString('pt-BR', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
+								<td>{permanencia.dataHoraSaida ? new Date(permanencia.dataHoraSaida).toLocaleString('pt-BR', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
 								<td>{permanencia.placaVeiculo}</td>
 								<td>{permanencia.valor}</td>
 							</tr>
