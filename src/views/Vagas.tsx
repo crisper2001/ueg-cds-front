@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import VagasAPI from "../utils/VagasAPI";
+import { FaPencil, FaTrash } from "react-icons/fa6";
 
 export default function Vagas() {
   const [vagas, setVagas] = useState<any[]>([]);
-  const [numero, setNumero] = useState<number>();
-  const [locHorizontal, setLocHorizontal] = useState<number>();
-  const [locVertical, setLocVertical] = useState<number>();
+  const [numeroAdd, setNumeroAdd] = useState<number>();
+  const [locHorizontalAdd, setLocHorizontalAdd] = useState<number>();
+  const [locVerticalAdd, setLocVerticalAdd] = useState<number>();
+  const [numeroEdit, setNumeroEdit] = useState<number>();
+  const [locHorizontalEdit, setLocHorizontalEdit] = useState<number>();
+  const [locVerticalEdit, setLocVerticalEdit] = useState<number>();
+  const [vagaBeingEdited, setVagaBeingEdited] = useState<any>(null);
 
   const fetchVagas = async () => {
     try {
@@ -24,17 +29,16 @@ export default function Vagas() {
 
   const handleAddVaga = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!numero || !locHorizontal || !locVertical) {
+    if (numeroAdd === undefined || locHorizontalAdd === undefined || locVerticalAdd === undefined) {
       alert("Preencha todos os campos");
       return;
     }
     try {
       const vagaData = {
-        numero,
-        locHorizontal,
-        locVertical,
+        numero: numeroAdd,
+        locHorizontal: locHorizontalAdd,
+        locVertical: locVerticalAdd,
       };
-      console.log(vagaData);
       const response = await VagasAPI.createVaga(vagaData);
       if (response) {
         console.log("Vaga criada com sucesso:", response);
@@ -42,6 +46,30 @@ export default function Vagas() {
       }
     } catch (error) {
       console.error("Error creating vaga:", error);
+    }
+  };
+
+  const handleEditVaga = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (numeroEdit === undefined || locHorizontalEdit === undefined || locVerticalEdit === undefined) {
+      alert("Preencha todos os campos");
+      return;
+    }
+    try {
+      const vagaData = {
+        id: vagaBeingEdited.id,
+        numero: numeroEdit,
+        locHorizontal: locHorizontalEdit,
+        locVertical: locVerticalEdit,
+      };
+      const response = await VagasAPI.updateVaga(vagaData);
+      if (response) {
+        console.log("Vaga atualizada com sucesso:", response);
+        fetchVagas();
+        (document.getElementById("edit_vaga") as HTMLDialogElement)?.close();
+      }
+    } catch (error) {
+      console.error("Error updating vaga:", error);
     }
   };
 
@@ -56,16 +84,37 @@ export default function Vagas() {
               <th>Localização Horizontal</th>
               <th>Localização Vertical</th>
               <th>Ocupada?</th>
+              <td></td>
             </tr>
           </thead>
           <tbody>
-            {vagas.map((vaga) => (
+            {vagas.sort((a, b) => a.id - b.id).map((vaga) => (
               <tr key={vaga.id}>
                 <td>{vaga.id}</td>
                 <td>{vaga.numero}</td>
                 <td>{vaga.locHorizontal}</td>
                 <td>{vaga.locVertical}</td>
                 <td>{vaga.isOcupada ? "Sim" : "Não"}</td>
+                <td>
+                  <button className="btn btn-xs btn-ghost" onClick={() => {
+                    (document.getElementById("edit_vaga") as HTMLDialogElement)?.showModal();
+                    setVagaBeingEdited(vaga);
+                    setNumeroEdit(vaga.numero);
+                    setLocHorizontalEdit(vaga.locHorizontal);
+                    setLocVerticalEdit(vaga.locVertical);
+                  }}>
+                    <FaPencil />
+                  </button>
+                  <button className="btn btn-xs btn-ghost text-red-400" onClick={() => {
+                    if (confirm(`Você tem certeza que deseja excluir a vaga ${vaga.numero}?`)) {
+                      VagasAPI.deleteVaga(vaga.id).then(() => {
+                        fetchVagas();
+                      });
+                    }
+                  }}>
+                    <FaTrash />
+                    </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -92,8 +141,8 @@ export default function Vagas() {
                 type="number"
                 className="input input-bordered w-full"
                 placeholder="Número"
-                value={numero}
-                onChange={(e) => setNumero(Number(e.target.value))}
+                value={numeroAdd}
+                onChange={(e) => setNumeroAdd(Number(e.target.value))}
               />
             </div>
             <div>
@@ -101,8 +150,8 @@ export default function Vagas() {
                 type="number"
                 className="input input-bordered w-full"
                 placeholder="Localização Horizontal"
-                value={locHorizontal}
-                onChange={(e) => setLocHorizontal(Number(e.target.value))}
+                value={locHorizontalAdd}
+                onChange={(e) => setLocHorizontalAdd(Number(e.target.value))}
               />
             </div>
             <div>
@@ -110,8 +159,8 @@ export default function Vagas() {
                 type="number"
                 className="input input-bordered w-full"
                 placeholder="Localização Vertical"
-                value={locVertical}
-                onChange={(e) => setLocVertical(Number(e.target.value))}
+                value={locVerticalAdd}
+                onChange={(e) => setLocVerticalAdd(Number(e.target.value))}
               />
             </div>
             <button
@@ -126,7 +175,51 @@ export default function Vagas() {
           <button>close</button>
         </form>
       </dialog>
+
+      <dialog id="edit_vaga" className="modal">
+        <div className="modal-box w-96">
+          <h3 className="font-bold text-lg pb-4">Editar Vaga</h3>
+          <form className="flex flex-col gap-4" onSubmit={handleEditVaga}>
+            <div>
+              <input
+                type="number"
+                className="input input-bordered w-full"
+                placeholder="Número"
+                value={numeroEdit}
+                onChange={(e) => setNumeroEdit(Number(e.target.value))}
+              />
+            </div>
+            <div>
+              <input
+                type="number"
+                className="input input-bordered w-full"
+                placeholder="Localização Horizontal"
+                value={locHorizontalEdit}
+                onChange={(e) => setLocHorizontalEdit(Number(e.target.value))}
+              />
+            </div>
+            <div>
+              <input
+                type="number"
+                className="input input-bordered w-full"
+                placeholder="Localização Vertical"
+                value={locVerticalEdit}
+                onChange={(e) => setLocVerticalEdit(Number(e.target.value))}
+              />
+            </div>
+            <button
+              type="submit"
+              className="btn btn-primary text-white w-1/3 mx-auto"
+            >
+              Salvar
+            </button>
+          </form>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
+
     </div>
   );
 }
-
