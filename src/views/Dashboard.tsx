@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import VagasAPI from "../utils/VagasAPI";
 
-export default function Estacionamento() {
+export default function Dashboard() {
 	const [vagas, setVagas] = useState<any[]>([]);
 	const [matrix, setMatrix] = useState<any[][]>([]);
 	const [currentDate, setCurrentDate] = useState<string>(new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' }));
