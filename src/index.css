@@ -1,22 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-.matrix {
-    display: flex;
-    flex-direction: column;
-    background-color: rgb(34, 34, 34);
-}
-.matrix-row {
-    display: flex;
-}
-.matrix-cell {
-    border: 2px solid rgb(224, 224, 54);
-    padding: 10px;
-    width: 100px;
-    height: 160px;
-    text-align: center;
-    color: rgb(235, 41, 41);
-    font-size: 2em;
-}
-
