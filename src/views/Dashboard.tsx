@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import VagasAPI from "../utils/VagasAPI";
+import { FaCheck, FaNotdef } from "react-icons/fa6";
 
 export default function Dashboard() {
 	const [vagas, setVagas] = useState<any[]>([]);
@@ -22,10 +23,10 @@ export default function Dashboard() {
 	const createMatrix = (vagas: any[]) => {
 		const maxHorizontal = Math.max(...vagas.map(vaga => vaga.locHorizontal));
 		const maxVertical = Math.max(...vagas.map(vaga => vaga.locVertical));
-		const newMatrix = Array.from({ length: maxVertical }, () => Array(maxHorizontal).fill(null));
+		const newMatrix = Array.from({ length: maxHorizontal }, () => Array(maxVertical).fill(null));
 
 		vagas.forEach(vaga => {
-			newMatrix[vaga.locHorizontal - 1][vaga.locVertical - 1] = vaga.numero;
+			newMatrix[vaga.locHorizontal - 1][vaga.locVertical - 1] = vaga;
 		});
 
 		setMatrix(newMatrix);
@@ -45,25 +46,32 @@ export default function Dashboard() {
 	return (
 		<div className="flex flex-col items-center justify-center gap-4">
 			<div className="text-center">
-        <p className="text-2xl">Bem-vindo!</p>
-        <p className="text-lg">Hoje é {currentDate}. São {currentTime}.</p>
+				<p className="text-2xl">Bem-vindo, {JSON.parse(localStorage.getItem('user') || '{}').nome}!</p>
+				<p className="text-lg">Hoje é {currentDate}. São {currentTime}.</p>
 			</div>
 			{vagas.length > 0 ? (
 				<>
-					<div className="matrix bg-base-300 p-2 rounded-lg">
+					<div className="flex flex-col bg-gray-900 p-2 rounded-lg">
 						{matrix.map((row, rowIndex) => (
-							<div key={rowIndex} className="matrix-row">
+							<div key={rowIndex} className="flex">
 								{row.map((vaga, colIndex) => (
-									<div key={colIndex} className="matrix-cell">
-										{vaga !== null ? vaga : '?'}
+									<div key={colIndex} className={vaga === null ? 'p-2 w-24 h-40 text-center text-red-600' : 'border-2 border-yellow-400 p-2 w-24 h-40 text-center text-3xl'}>
+										{vaga !== null ? (
+											<div className="flex flex-col items-center justify-center">
+												<p className="text-yellow-400">{vaga.numero}</p>
+												{vaga.isOcupada ? <FaNotdef className="text-red-500" /> : <FaCheck className="text-green-500" />}
+											</div>
+										) : ''}
 									</div>
 								))}
 							</div>
 						))}
 					</div>
 
-					<div className="text-lg text-center bg-base-300 p-2 rounded-lg">
-						Total de vagas: {vagas.length}
+					<div className="flex items-center justify-center gap-8 bg-base-300 p-2 rounded-lg">
+						<span>Vagas disponíveis: {vagas.filter(vaga => !vaga.isOcupada).length}</span>
+						<span>Vagas ocupadas: {vagas.filter(vaga => vaga.isOcupada).length}</span>
+						<span>Total de vagas: {vagas.length}</span>
 					</div>
 				</>
 			) : (
