@@ -31,7 +31,7 @@ export default function Funcionarios() {
 						</tr>
 					</thead>
 					<tbody>
-						{users.map((user) => (
+						{users.sort((a, b) => a.id - b.id).map((user) => (
 							<tr key={user.id}>
 								<td>{user.id}</td>
 								<td>{user.nome}</td>

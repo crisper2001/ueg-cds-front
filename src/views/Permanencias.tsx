@@ -131,7 +131,7 @@ export default function Permanencias() {
             </tr>
           </thead>
           <tbody>
-            {permanencias.map((permanencia) => (
+            {permanencias.sort((a, b) => a.id - b.id).map((permanencia) => (
               <tr key={permanencia.id}>
                 <td>{permanencia.id}</td>
                 <td>{new Date(permanencia.dataHoraEntrada).toLocaleString('pt-BR', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
