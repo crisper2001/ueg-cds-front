@@ -7,99 +7,87 @@ import { FaTrash } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 
 export default function Permanencias() {
-	const [permanencias, setPermanencias] = useState<any[]>([]);
-	const [dataHoraEntradaAdd, setDataHoraEntradaAdd] = useState<string>();
-	const [dataHoraSaidaAdd, setDataHoraSaidaAdd] = useState<string>();
-	const [placaVeiculoAdd, setPlacaVeiculoAdd] = useState<string>();
-	const [vagaIdAdd, setVagaIdAdd] = useState<number>();
-	const [funcionarioIdAdd, setFuncionarioIdAdd] = useState<number>();
-	const [precoIdAdd, setPrecoIdAdd] = useState<number>();
+  const [permanencias, setPermanencias] = useState<any[]>([]);
+  const [dataHoraEntradaAdd, setDataHoraEntradaAdd] = useState<string>();
+  const [dataHoraSaidaAdd, setDataHoraSaidaAdd] = useState<string>();
+  const [placaVeiculoAdd, setPlacaVeiculoAdd] = useState<string>();
+  const [vagaIdAdd, setVagaIdAdd] = useState<number>();
+  const [funcionarioIdAdd, setFuncionarioIdAdd] = useState<number>();
+  const [precoIdAdd, setPrecoIdAdd] = useState<number>();
   const [dataHoraEntradaEdit, setDataHoraEntradaEdit] = useState<string>();
-	const [dataHoraSaidaEdit, setDataHoraSaidaEdit] = useState<string>();
-	const [placaVeiculoEdit, setPlacaVeiculoEdit] = useState<string>();
-	const [vagaIdEdit, setVagaIdEdit] = useState<number>();
-	const [funcionarioIdEdit, setFuncionarioIdEdit] = useState<number>();
-	const [precoIdEdit, setPrecoIdEdit] = useState<number>();
-	const [vagas, setVagas] = useState<any[]>([]);
-	const [funcionarios, setFuncionarios] = useState<any[]>([]);
-	const [precos, setPrecos] = useState<any[]>([]);
+  const [dataHoraSaidaEdit, setDataHoraSaidaEdit] = useState<string>();
+  const [placaVeiculoEdit, setPlacaVeiculoEdit] = useState<string>();
+  const [vagaIdEdit, setVagaIdEdit] = useState<number>();
+  const [funcionarioIdEdit, setFuncionarioIdEdit] = useState<number>();
+  const [precoIdEdit, setPrecoIdEdit] = useState<number>();
+  const [vagas, setVagas] = useState<any[]>([]);
+  const [precos, setPrecos] = useState<any[]>([]);
   const [permanenciaBeingEdited, setPermanenciaBeingEdited] = useState<any>(null);
 
-	const fetchPermanencias = async () => {
-		try {
-			const data = await PermanenciasAPI.getAllPermanencias();
-			if (data) {
-				setPermanencias(data);
-			}
-		} catch (error) {
-			console.error('Error fetching all permanencias:', error);
-		}
-	};
+  const fetchPermanencias = async () => {
+    try {
+      const data = await PermanenciasAPI.getAllPermanencias();
+      if (data) {
+        setPermanencias(data);
+      }
+    } catch (error) {
+      console.error('Error fetching all permanencias:', error);
+    }
+  };
 
-	const fetchVagas = async () => {
-		try {
-			const data = await VagasAPI.getAllVagas();
-			if (data) {
-				setVagas(data);
-			}
-		} catch (error) {
-			console.error('Error fetching all vagas:', error);
-		}
-	};
+  const fetchVagas = async () => {
+    try {
+      const data = await VagasAPI.getAllVagas();
+      if (data) {
+        setVagas(data);
+      }
+    } catch (error) {
+      console.error('Error fetching all vagas:', error);
+    }
+  };
 
-	const fetchFuncionarios = async () => {
-		try {
-			const data = await UsersAPI.getAllUsers();
-			if (data) {
-				setFuncionarios(data);
-			}
-		} catch (error) {
-			console.error('Error fetching all funcionarios:', error);
-		}
-	};
+  const fetchPrecos = async () => {
+    try {
+      const data = await PricesAPI.getAllPrices();
+      if (data) {
+        setPrecos(data);
+      }
+    } catch (error) {
+      console.error('Error fetching all precos:', error);
+    }
+  };
 
-	const fetchPrecos = async () => {
-		try {
-			const data = await PricesAPI.getAllPrices();
-			if (data) {
-				setPrecos(data);
-			}
-		} catch (error) {
-			console.error('Error fetching all precos:', error);
-		}
-	};
+  useEffect(() => {
+    fetchPermanencias();
+    fetchVagas();
+    fetchPrecos();
+  }, []);
 
-	useEffect(() => {
-		fetchPermanencias();
-		fetchVagas();
-		fetchFuncionarios();
-		fetchPrecos();
-	}, []);
-
-	const handleAddPermanencia = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		if (dataHoraEntradaAdd === undefined || placaVeiculoAdd === undefined || vagaIdAdd === undefined || funcionarioIdAdd === undefined || precoIdAdd === undefined) {
-			alert("Preencha todos os campos");
-			return;
-		}
-		try {
-			const permanenciaData = {
-				dataHoraEntrada: dataHoraEntradaAdd,
-				placaVeiculo: placaVeiculoAdd,
-				vagaId: vagaIdAdd,
-				funcionarioId: funcionarioIdAdd,
-				precoId: precoIdAdd,
-				dataHoraSaida: dataHoraSaidaAdd ?? undefined,
-			};
-			const response = await PermanenciasAPI.createPermanencia(permanenciaData);
-			if (response) {
-				console.log('Permanencia criada com sucesso:', response);
-				fetchPermanencias();
-			}
-		} catch (error) {
-			console.error('Error creating permanencia:', error);
-		}
-	};
+  const handleAddPermanencia = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (dataHoraEntradaAdd === undefined || placaVeiculoAdd === undefined || vagaIdAdd === undefined || precoIdAdd === undefined) {
+      alert("Preencha todos os campos");
+      return;
+    }
+    const funcionarioId = JSON.parse(localStorage.getItem('user') || '{}').id;
+    try {
+      const permanenciaData = {
+        dataHoraEntrada: dataHoraEntradaAdd,
+        placaVeiculo: placaVeiculoAdd,
+        vagaId: vagaIdAdd,
+        funcionarioId,
+        precoId: precoIdAdd,
+        dataHoraSaida: dataHoraSaidaAdd ?? undefined,
+      };
+      const response = await PermanenciasAPI.createPermanencia(permanenciaData);
+      if (response) {
+        console.log('Permanencia criada com sucesso:', response);
+        fetchPermanencias();
+      }
+    } catch (error) {
+      console.error('Error creating permanencia:', error);
+    }
+  };
 
   const handleEditPermanencia = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,28 +116,28 @@ export default function Permanencias() {
     }
   };
 
-	return (
-		<div className="flex flex-col gap-4">
-			{permanencias.length > 0 ? (
-				<table className="table w-full border-2 border-base-200">
-					<thead>
-						<tr className="bg-base-200">
-							<th>ID</th>
-							<th>Data-Hora de Entrada</th>
-							<th>Data-Hora de Saída</th>
-							<th>Placa do Veículo</th>
-							<th>Valor (R$)</th>
+  return (
+    <div className="flex flex-col gap-4">
+      {permanencias.length > 0 ? (
+        <table className="table w-full border-2 border-base-200">
+          <thead>
+            <tr className="bg-base-200">
+              <th>ID</th>
+              <th>Data-Hora de Entrada</th>
+              <th>Data-Hora de Saída</th>
+              <th>Placa do Veículo</th>
+              <th>Valor (R$)</th>
               <th></th>
-						</tr>
-					</thead>
-					<tbody>
-						{permanencias.map((permanencia) => (
-							<tr key={permanencia.id}>
-								<td>{permanencia.id}</td>
-								<td>{new Date(permanencia.dataHoraEntrada).toLocaleString('pt-BR', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
-								<td>{permanencia.dataHoraSaida ? new Date(permanencia.dataHoraSaida).toLocaleString('pt-BR', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
-								<td>{permanencia.placaVeiculo}</td>
-								<td>{permanencia.valor}</td>
+            </tr>
+          </thead>
+          <tbody>
+            {permanencias.map((permanencia) => (
+              <tr key={permanencia.id}>
+                <td>{permanencia.id}</td>
+                <td>{new Date(permanencia.dataHoraEntrada).toLocaleString('pt-BR', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
+                <td>{permanencia.dataHoraSaida ? new Date(permanencia.dataHoraSaida).toLocaleString('pt-BR', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
+                <td>{permanencia.placaVeiculo}</td>
+                <td>{permanencia.valor}</td>
                 <td>
                   <button className="btn btn-xs btn-ghost" onClick={() => {
                     (document.getElementById("edit_permanencia") as HTMLDialogElement)?.showModal();
@@ -173,19 +161,19 @@ export default function Permanencias() {
                     <FaTrash />
                   </button>
                 </td>
-							</tr>
-						))}
-					</tbody>
-				</table>
-			) : (
-				<p className="text-lg text-center">Nenhuma permanência encontrada.</p>
-			)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p className="text-lg text-center">Nenhuma permanência encontrada.</p>
+      )}
 
-			<div className="flex justify-end">
-				<button className="btn btn-primary text-white" onClick={() => (document.getElementById('add_permanencia') as HTMLDialogElement).showModal()}>
-					+ Adicionar Permanência
-				</button>
-			</div>
+      <div className="flex justify-end">
+        <button className="btn btn-primary text-white" onClick={() => (document.getElementById('add_permanencia') as HTMLDialogElement).showModal()}>
+          + Adicionar Permanência
+        </button>
+      </div>
 
       <dialog id="add_permanencia" className="modal">
         <div className="modal-box w-96">
@@ -193,7 +181,7 @@ export default function Permanencias() {
           <form onSubmit={handleAddPermanencia} className="flex flex-col gap-4">
             <div>
               <label className="label" htmlFor="dataHoraEntradaAdd">
-                Data Hora Entrada
+                Data/Hora Entrada
               </label>
               <input
                 type="datetime-local"
@@ -205,7 +193,7 @@ export default function Permanencias() {
             </div>
             <div>
               <label className="label" htmlFor="dataHoraSaidaAdd">
-                Data Hora Saida
+                Data/Hora Saida (opcional)
               </label>
               <input
                 type="datetime-local"
@@ -238,29 +226,13 @@ export default function Permanencias() {
                 onChange={(e) => setVagaIdAdd(Number(e.target.value))}
               >
                 <option value={0}>Selecione uma vaga</option>
-                {vagas.map((vaga) => (
-                  <option key={vaga.id} value={vaga.id}>
-                    {vaga.numero}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="label" htmlFor="funcionarioIdAdd">
-                Funcionário
-              </label>
-              <select
-                id="funcionarioIdAdd"
-                className="select select-bordered w-full"
-                value={funcionarioIdAdd}
-                onChange={(e) => setFuncionarioIdAdd(Number(e.target.value))}
-              >
-                <option value={0}>Selecione um funcionário</option>
-                {funcionarios.map((funcionario) => (
-                  <option key={funcionario.id} value={funcionario.id}>
-                    {funcionario.nome}
-                  </option>
-                ))}
+                {vagas
+                  .sort((a, b) => a.numero - b.numero)
+                  .map((vaga) => (
+                    <option key={vaga.id} value={vaga.id}>
+                      {vaga.numero}
+                    </option>
+                  ))}
               </select>
             </div>
             <div>
@@ -299,33 +271,46 @@ export default function Permanencias() {
           <h3 className="font-bold text-lg pb-4">Editar Permanência</h3>
           <form className="flex flex-col gap-4" onSubmit={handleEditPermanencia}>
             <div>
+              <label className="label" htmlFor="dataHoraEntradaEdit">
+                Data/Hora Entrada
+              </label>
               <input
                 type="datetime-local"
                 className="input input-bordered w-full"
-                placeholder="Data/Hora Entrada"
+                id="dataHoraEntradaEdit"
                 value={dataHoraEntradaEdit}
                 onChange={(e) => setDataHoraEntradaEdit(e.target.value)}
               />
             </div>
             <div>
+              <label className="label" htmlFor="dataHoraSaidaEdit">
+                Data/Hora Saída (opcional)
+              </label>
               <input
                 type="datetime-local"
                 className="input input-bordered w-full"
-                placeholder="Data/Hora Saída (opcional)"
+                id="dataHoraSaidaEdit"
                 value={dataHoraSaidaEdit}
                 onChange={(e) => setDataHoraSaidaEdit(e.target.value)}
               />
             </div>
             <div>
+              <label className="label" htmlFor="placaVeiculoEdit">
+                Placa do Veículo
+              </label>
               <input
                 type="text"
                 className="input input-bordered w-full"
+                id="placaVeiculoEdit"
                 placeholder="Placa do Veículo"
                 value={placaVeiculoEdit}
                 onChange={(e) => setPlacaVeiculoEdit(e.target.value)}
               />
             </div>
             <div>
+              <label className="label" htmlFor="vagaIdEdit">
+                Vaga
+              </label>
               <select
                 id="vagaIdEdit"
                 className="select select-bordered w-full"
@@ -333,29 +318,19 @@ export default function Permanencias() {
                 onChange={(e) => setVagaIdEdit(Number(e.target.value))}
               >
                 <option value={0}>Selecione uma vaga</option>
-                {vagas.map((vaga) => (
-                  <option key={vaga.id} value={vaga.id}>
-                    {vaga.numero}
-                  </option>
-                ))}
+                {vagas
+                  .sort((a, b) => a.numero - b.numero)
+                  .map((vaga) => (
+                    <option key={vaga.id} value={vaga.id}>
+                      {vaga.numero}
+                    </option>
+                  ))}
               </select>
             </div>
             <div>
-              <select
-                id="funcionarioIdEdit"
-                className="select select-bordered w-full"
-                value={funcionarioIdEdit}
-                onChange={(e) => setFuncionarioIdEdit(Number(e.target.value))}
-              >
-                <option value={0}>Selecione um funcionário</option>
-                {funcionarios.map((funcionario) => (
-                  <option key={funcionario.id} value={funcionario.id}>
-                    {funcionario.nome}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
+              <label className="label" htmlFor="precoIdEdit">
+                Preço
+              </label>
               <select
                 id="precoIdEdit"
                 className="select select-bordered w-full"
@@ -383,7 +358,6 @@ export default function Permanencias() {
         </form>
       </dialog>
 
-		</div>
-	);
+    </div>
+  );
 }
-
