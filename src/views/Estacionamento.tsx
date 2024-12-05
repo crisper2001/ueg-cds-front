@@ -23,7 +23,7 @@ export default function Estacionamento() {
 		const newMatrix = Array.from({ length: maxVertical }, () => Array(maxHorizontal).fill(null));
 
 		vagas.forEach(vaga => {
-			newMatrix[vaga.locVertical - 1][vaga.locHorizontal - 1] = vaga.numero;
+			newMatrix[vaga.locHorizontal - 1][vaga.locVertical - 1] = vaga.numero;
 		});
 
 		setMatrix(newMatrix);
@@ -34,19 +34,30 @@ export default function Estacionamento() {
 	}, []);
 
 	return (
-		<div className="flex items-center justify-center">
-			<div className="matrix bg-base-300 p-2 rounded-lg">
-				{matrix.map((row, rowIndex) => (
-					<div key={rowIndex} className="matrix-row">
-						{row.map((vaga, colIndex) => (
-							<div key={colIndex} className="matrix-cell">
-								{vaga !== null ? vaga : '?'}
+		<div className="flex flex-col items-center justify-center">
+			{vagas.length > 0 ? (
+				<>
+					<div className="matrix bg-base-300 p-2 rounded-lg">
+						{matrix.map((row, rowIndex) => (
+							<div key={rowIndex} className="matrix-row">
+								{row.map((vaga, colIndex) => (
+									<div key={colIndex} className="matrix-cell">
+										{vaga !== null ? vaga : '?'}
+									</div>
+								))}
 							</div>
 						))}
 					</div>
-				))}
-			</div>
-		</div>
 
+					<div className="text-lg text-center">
+						Total de vagas: {vagas.length}
+					</div>
+				</>
+			) : (
+				<div className="text-lg text-center">
+					Nenhuma vaga encontrada.
+				</div>
+			)}
+		</div>
 	);
 }
