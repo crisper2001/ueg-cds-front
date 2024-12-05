@@ -142,37 +142,45 @@ export default function Precos() {
           <h3 className="font-bold text-lg pb-4">Adicionar Preço</h3>
           <form onSubmit={handleAddPreco} className="flex flex-col gap-4">
             <div>
+              <label className="label">
+                <span className="label-text">Tempo Inicial (min)</span>
+              </label>
               <input
                 type="number"
                 className="input input-bordered w-full"
-                placeholder="Tempo Inicial (min)"
                 value={tempoInicialAdd}
                 onChange={(e) => setTempoInicialAdd(Number(e.target.value))}
               />
             </div>
             <div>
+              <label className="label">
+                <span className="label-text">Tempo Adicional (min)</span>
+              </label>
               <input
                 type="number"
                 className="input input-bordered w-full"
-                placeholder="Tempo Adicional (min)"
                 value={tempoAdicionalAdd}
                 onChange={(e) => setTempoAdicionalAdd(Number(e.target.value))}
               />
             </div>
             <div>
+              <label className="label">
+                <span className="label-text">Valor Inicial (R$)</span>
+              </label>
               <input
                 type="number"
                 className="input input-bordered w-full"
-                placeholder="Valor Inicial (R$)"
                 value={valorInicialAdd}
                 onChange={(e) => setValorInicialAdd(Number(e.target.value))}
               />
             </div>
             <div>
+              <label className="label">
+                <span className="label-text">Valor Adicional (R$)</span>
+              </label>
               <input
                 type="number"
                 className="input input-bordered w-full"
-                placeholder="Valor Adicional (R$)"
                 value={valorAdicionalAdd}
                 onChange={(e) => setValorAdicionalAdd(Number(e.target.value))}
               />
@@ -195,15 +203,20 @@ export default function Precos() {
           <h3 className="font-bold text-lg pb-4">Editar Preço</h3>
           <form className="flex flex-col gap-4" onSubmit={handleEditPreco}>
             <div>
+              <label className="label">
+                <span className="label-text">Tempo Inicial (min)</span>
+              </label>
               <input
                 type="number"
                 className="input input-bordered w-full"
-                placeholder="Tempo Inicial (min)"
                 value={tempoInicialEdit}
                 onChange={(e) => setTempoInicialEdit(Number(e.target.value))}
               />
             </div>
             <div>
+              <label className="label">
+                <span className="label-text">Tempo Adicional (min)</span>
+              </label>
               <input
                 type="number"
                 className="input input-bordered w-full"
@@ -213,6 +226,9 @@ export default function Precos() {
               />
             </div>
             <div>
+              <label className="label">
+                <span className="label-text">Valor Inicial (R$)</span>
+              </label>
               <input
                 type="number"
                 className="input input-bordered w-full"
@@ -222,6 +238,9 @@ export default function Precos() {
               />
             </div>
             <div>
+              <label className="label">
+                <span className="label-text">Valor Adicional (R$)</span>
+              </label>
               <input
                 type="number"
                 className="input input-bordered w-full"

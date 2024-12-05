@@ -137,27 +137,39 @@ export default function Vagas() {
           <h3 className="font-bold text-lg pb-4">Adicionar Vaga</h3>
           <form className="flex flex-col gap-4" onSubmit={handleAddVaga}>
             <div>
+              <label htmlFor="numero_add" className="label">
+                Número
+              </label>
               <input
                 type="number"
                 className="input input-bordered w-full"
+                id="numero_add"
                 placeholder="Número"
                 value={numeroAdd}
                 onChange={(e) => setNumeroAdd(Number(e.target.value))}
               />
             </div>
             <div>
+              <label htmlFor="loc_horizontal_add" className="label">
+                Localização Horizontal
+              </label>
               <input
                 type="number"
                 className="input input-bordered w-full"
+                id="loc_horizontal_add"
                 placeholder="Localização Horizontal"
                 value={locHorizontalAdd}
                 onChange={(e) => setLocHorizontalAdd(Number(e.target.value))}
               />
             </div>
             <div>
+              <label htmlFor="loc_vertical_add" className="label">
+                Localização Vertical
+              </label>
               <input
                 type="number"
                 className="input input-bordered w-full"
+                id="loc_vertical_add"
                 placeholder="Localização Vertical"
                 value={locVerticalAdd}
                 onChange={(e) => setLocVerticalAdd(Number(e.target.value))}
@@ -181,27 +193,39 @@ export default function Vagas() {
           <h3 className="font-bold text-lg pb-4">Editar Vaga</h3>
           <form className="flex flex-col gap-4" onSubmit={handleEditVaga}>
             <div>
+              <label htmlFor="numero_edit" className="label">
+                Número
+              </label>
               <input
                 type="number"
                 className="input input-bordered w-full"
+                id="numero_edit"
                 placeholder="Número"
                 value={numeroEdit}
                 onChange={(e) => setNumeroEdit(Number(e.target.value))}
               />
             </div>
             <div>
+              <label htmlFor="loc_horizontal_edit" className="label">
+                Localização Horizontal
+              </label>
               <input
                 type="number"
                 className="input input-bordered w-full"
+                id="loc_horizontal_edit"
                 placeholder="Localização Horizontal"
                 value={locHorizontalEdit}
                 onChange={(e) => setLocHorizontalEdit(Number(e.target.value))}
               />
             </div>
             <div>
+              <label htmlFor="loc_vertical_edit" className="label">
+                Localização Vertical
+              </label>
               <input
                 type="number"
                 className="input input-bordered w-full"
+                id="loc_vertical_edit"
                 placeholder="Localização Vertical"
                 value={locVerticalEdit}
                 onChange={(e) => setLocVerticalEdit(Number(e.target.value))}
