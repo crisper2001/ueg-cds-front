@@ -55,6 +55,7 @@ export default function Vagas() {
               <th>Número</th>
               <th>Localização Horizontal</th>
               <th>Localização Vertical</th>
+              <th>Ocupada?</th>
             </tr>
           </thead>
           <tbody>
@@ -64,6 +65,7 @@ export default function Vagas() {
                 <td>{vaga.numero}</td>
                 <td>{vaga.locHorizontal}</td>
                 <td>{vaga.locVertical}</td>
+                <td>{vaga.isOcupada ? "Sim" : "Não"}</td>
               </tr>
             ))}
           </tbody>
