@@ -6,17 +6,25 @@ import Precos from "../views/Precos";
 import Vagas from "../views/Vagas";
 import Permanencias from "../views/Permanencias";
 import Estacionamento from "../views/Estacionamento";
+import UsersAPI from "../utils/UsersAPI";
 
 export default function Home() {
 
-	const [ view, setView ] = useState("vagas");
+	const [ view, setView ] = useState("estacionamento");
 	const navigate = useNavigate();
 
-	// UseEffect para redirecionar para página de login caso o usuário não esteja logado
+	// UseEffect para redirecionar para página de login caso o usuário não esteja logado ou não exista mais
 	useEffect(() => {
 		const user = localStorage.getItem("user");
 		if (!user) {
 			navigate("/login");
+		} else {
+			UsersAPI.getUser(JSON.parse(user).id).catch((error) => {
+				if (error.response.status === 404) {
+					localStorage.removeItem("user");
+				}
+				navigate("/login");
+			});
 		}
 	}, []);
 
