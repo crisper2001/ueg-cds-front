@@ -57,9 +57,9 @@ export default function Dashboard() {
 								{row.map((vaga, colIndex) => (
 									<div key={colIndex} className={vaga === null ? 'p-2 w-24 h-40 text-center text-red-600' : 'border-2 border-yellow-400 p-2 w-24 h-40 text-center text-3xl'}>
 										{vaga !== null ? (
-											<div className="flex flex-col items-center justify-center">
+											<div className="flex flex-col items-center justify-center gap-2">
 												<p className="text-yellow-400">{vaga.numero}</p>
-												{vaga.isOcupada ? <FaNotdef className="text-red-500" /> : <FaCheck className="text-green-500" />}
+												<div>{vaga.isOcupada ? <FaNotdef className="text-red-500" /> : <FaCheck className="text-green-500" />}</div>
 											</div>
 										) : ''}
 									</div>
@@ -82,4 +82,3 @@ export default function Dashboard() {
 		</div>
 	);
 }
-
