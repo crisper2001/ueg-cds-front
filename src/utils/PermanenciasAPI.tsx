@@ -3,7 +3,7 @@ import axios from 'axios';
 const BASE_URL = 'http://localhost:8080/permanencias';
 
 const PermanenciasAPI = {
-  createPermanencia: async ({dataHoraEntrada, dataHoraSaida, placaVeiculo, vagaId, funcionarioId, precoId}: {dataHoraEntrada: string, dataHoraSaida: string, placaVeiculo: string, vagaId: number, funcionarioId: number, precoId: number}) => {
+  createPermanencia: async ({dataHoraEntrada, dataHoraSaida, placaVeiculo, vagaId, funcionarioId, precoId}: {dataHoraEntrada: string, dataHoraSaida?: string, placaVeiculo: string, vagaId: number, funcionarioId: number, precoId: number}) => {
     try {
       const response = await axios.post(BASE_URL, {dataHoraEntrada, dataHoraSaida, placaVeiculo, vagaId, funcionarioId, precoId});
       return response.data;
