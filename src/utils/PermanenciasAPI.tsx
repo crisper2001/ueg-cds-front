@@ -23,7 +23,7 @@ const PermanenciasAPI = {
     }
   },
 
-  updatePermanencia: async ({id, dataHoraEntrada, dataHoraSaida, placaVeiculo, vagaId, funcionarioId, precoId}: {id: number, dataHoraEntrada: string, dataHoraSaida: string, placaVeiculo: string, vagaId: number, funcionarioId: number, precoId: number}) => {
+  updatePermanencia: async ({id, dataHoraEntrada, dataHoraSaida, placaVeiculo, vagaId, funcionarioId, precoId}: {id: number, dataHoraEntrada: string, dataHoraSaida?: string, placaVeiculo: string, vagaId: number, funcionarioId: number, precoId: number}) => {
     try {
       const response = await axios.put(`${BASE_URL}/${id}`, {id, dataHoraEntrada, dataHoraSaida, placaVeiculo, vagaId, funcionarioId, precoId});
       return response.data;
