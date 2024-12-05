@@ -71,7 +71,7 @@ export default function SignUp() {
               <input
                 type="password"
                 className="grow"
-                placeholder="Password"
+                placeholder="Senha"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -79,7 +79,7 @@ export default function SignUp() {
             </label>
             <button
               type="submit"
-              className="btn btn-primary w-1/3"
+              className="btn btn-primary text-white w-1/3"
             >
               Criar conta
             </button>

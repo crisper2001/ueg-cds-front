@@ -65,7 +65,7 @@ export default function Login() {
             </label>
             <button
               type="submit"
-              className="btn btn-primary w-1/3"
+              className="btn btn-primary text-white w-1/3"
             >
               Entrar
             </button>
