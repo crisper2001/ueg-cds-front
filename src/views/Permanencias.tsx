@@ -114,9 +114,6 @@ export default function Permanencias() {
         dataHoraEntrada: dataHoraEntradaEdit,
         dataHoraSaida: dataHoraSaidaEdit ?? undefined,
         placaVeiculo: placaVeiculoEdit,
-        vagaId: vagaIdEdit,
-        funcionarioId: funcionarioIdEdit,
-        precoId: precoIdEdit,
       };
       const response = await PermanenciasAPI.updatePermanencia(permanenciaData);
       if (response) {
