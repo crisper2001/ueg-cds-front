@@ -19,11 +19,11 @@ export default function Home() {
     if (!funcionario) {
       navigate("/login");
     } else {
-      FuncionariosAPI.getFuncionario(JSON.parse(funcionario).id).catch((error) => {
-        if (error.response.status === 404) {
+      FuncionariosAPI.getFuncionario(JSON.parse(funcionario).id).then((response) => {
+        if (!response) {
           localStorage.removeItem("funcionario");
+          navigate("/login");
         }
-        navigate("/login");
       });
     }
   }, []);
