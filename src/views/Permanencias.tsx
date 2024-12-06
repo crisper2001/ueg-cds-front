@@ -4,6 +4,7 @@ import VagasAPI from "../utils/VagasAPI";
 import { FaTrash } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import PrecosAPI from "../utils/PrecosAPI";
+import FuncionariosAPI from "../utils/FuncionariosAPI";
 
 export default function Permanencias() {
   const [permanencias, setPermanencias] = useState<any[]>([]);
@@ -12,6 +13,7 @@ export default function Permanencias() {
   const [placaVeiculoAdd, setPlacaVeiculoAdd] = useState<string>('');
   const [vagaIdAdd, setVagaIdAdd] = useState<number>(0);
   const [precoIdAdd, setPrecoIdAdd] = useState<number>(0);
+  const [funcionarioIdAdd, setFuncionarioIdAdd] = useState<number>(0);
   const [dataHoraEntradaEdit, setDataHoraEntradaEdit] = useState<string>('');
   const [dataHoraSaidaEdit, setDataHoraSaidaEdit] = useState<string>('');
   const [placaVeiculoEdit, setPlacaVeiculoEdit] = useState<string>('');
@@ -20,6 +22,7 @@ export default function Permanencias() {
   const [precoIdEdit, setPrecoIdEdit] = useState<number>(0);
   const [vagas, setVagas] = useState<any[]>([]);
   const [precos, setPrecos] = useState<any[]>([]);
+  const [funcionarios, setFuncionarios] = useState<any[]>([]);
   const [permanenciaBeingEdited, setPermanenciaBeingEdited] = useState<any>(null);
 
   const fetchPermanencias = async () => {
@@ -55,31 +58,42 @@ export default function Permanencias() {
     }
   };
 
+  const fetchFuncionarios = async () => {
+    try {
+      const data = await FuncionariosAPI.getAllFuncionarios();
+      if (data) {
+        setFuncionarios(data);
+      }
+    } catch (error) {
+      console.error('Error fetching all funcionarios:', error);
+    }
+  };
+
   useEffect(() => {
     fetchPermanencias();
     fetchVagas();
     fetchPrecos();
+    fetchFuncionarios();
   }, []);
 
   const handleAddPermanencia = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (dataHoraEntradaAdd === undefined || placaVeiculoAdd === undefined || vagaIdAdd === undefined || precoIdAdd === undefined) {
+    if (!dataHoraEntradaAdd || !placaVeiculoAdd || !vagaIdAdd || !precoIdAdd) {
       alert("Preencha todos os campos");
       return;
     }
-    const funcionarioId = JSON.parse(localStorage.getItem('funcionario') || '{}').id;
     try {
       const permanenciaData = {
         dataHoraEntrada: dataHoraEntradaAdd,
         placaVeiculo: placaVeiculoAdd,
         vagaId: vagaIdAdd,
-        funcionarioId,
+        funcionarioId: funcionarioIdAdd,
         precoId: precoIdAdd,
         dataHoraSaida: dataHoraSaidaAdd ?? undefined,
       };
       const response = await PermanenciasAPI.createPermanencia(permanenciaData);
       if (response) {
-        console.log('Permanencia criada com sucesso:', response);
+        alert('Permanência criada com sucesso');
         fetchPermanencias();
       }
     } catch (error) {
@@ -105,9 +119,9 @@ export default function Permanencias() {
       };
       const response = await PermanenciasAPI.updatePermanencia(permanenciaData);
       if (response) {
-        console.log("Permanencia atualizada com sucesso:", response);
-        fetchPermanencias();
         (document.getElementById("edit_permanencia") as HTMLDialogElement)?.close();
+        alert("Permanencia atualizada com sucesso");
+        fetchPermanencias();
       }
     } catch (error) {
       console.error("Error updating permanencia:", error);
@@ -124,7 +138,7 @@ export default function Permanencias() {
               <th>Data-Hora de Entrada</th>
               <th>Data-Hora de Saída</th>
               <th>Placa do Veículo</th>
-              <th>Valor (R$)</th>
+              <th>Valor</th>
               <th></th>
             </tr>
           </thead>
@@ -135,7 +149,7 @@ export default function Permanencias() {
                 <td>{new Date(permanencia.dataHoraEntrada).toLocaleString('pt-BR', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
                 <td>{permanencia.dataHoraSaida ? new Date(permanencia.dataHoraSaida).toLocaleString('pt-BR', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
                 <td>{permanencia.placaVeiculo}</td>
-                <td>{permanencia.valor}</td>
+                <td>{Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(permanencia.valor)}</td>
                 <td>
                   <button className="btn btn-xs btn-ghost" onClick={() => {
                     (document.getElementById("edit_permanencia") as HTMLDialogElement)?.showModal();
@@ -251,6 +265,24 @@ export default function Permanencias() {
                 ))}
               </select>
             </div>
+            <div>
+              <label className="label" htmlFor="funcionarioIdAdd">
+                Funcionário
+              </label>
+              <select
+                id="funcionarioIdAdd"
+                className="select select-bordered w-full"
+                value={funcionarioIdAdd}
+                onChange={(e) => setFuncionarioIdAdd(Number(e.target.value))}
+              >
+                <option value={0}>Selecione um funcionário</option>
+                {funcionarios.map((funcionario) => (
+                  <option key={funcionario.id} value={funcionario.id}>
+                    {funcionario.nome}
+                  </option>
+                ))}
+              </select>
+            </div>
             <button
               type="submit"
               className="btn btn-primary text-white w-1/3 mx-auto"
@@ -323,6 +355,24 @@ export default function Permanencias() {
                       {vaga.numero}
                     </option>
                   ))}
+              </select>
+            </div>
+            <div>
+              <label className="label" htmlFor="funcionarioIdEdit">
+                Funcionário
+              </label>
+              <select
+                id="funcionarioIdEdit"
+                className="select select-bordered w-full"
+                value={funcionarioIdEdit}
+                onChange={(e) => setFuncionarioIdEdit(Number(e.target.value))}
+              >
+                <option value={0}>Selecione um funcionário</option>
+                {funcionarios.map((funcionario) => (
+                  <option key={funcionario.id} value={funcionario.id}>
+                    {funcionario.nome}
+                  </option>
+                ))}
               </select>
             </div>
             <div>
