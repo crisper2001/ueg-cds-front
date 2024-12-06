@@ -1,27 +1,27 @@
 import { useEffect, useState } from "react";
-import UsersAPI from "../utils/UsersAPI";
+import FuncionariosAPI from "../utils/FuncionariosAPI";
 
 export default function Funcionarios() {
-	const [users, setUsers] = useState<any[]>([]);
+	const [funcionarios, setFuncionarios] = useState<any[]>([]);
 
-	const fetchUsers = async () => {
+	const fetchFuncionarios = async () => {
 		try {
-			const data = await UsersAPI.getAllUsers();
+			const data = await FuncionariosAPI.getAllFuncionarios();
 			if (data) {
-				setUsers(data);
+				setFuncionarios(data);
 			}
 		} catch (error) {
-			console.error('Error fetching all users:', error);
+			console.error('Error fetching all funcionarios:', error);
 		}
 	};
 
 	useEffect(() => {
-		fetchUsers();
+		fetchFuncionarios();
 	}, []);
 
 	return (
 		<div className="flex flex-col gap-4">
-			{users.length > 0 ? (
+			{funcionarios.length > 0 ? (
 				<table className="table w-full border-2 border-base-200">
 					<thead>
 						<tr className="bg-base-200">
@@ -31,11 +31,11 @@ export default function Funcionarios() {
 						</tr>
 					</thead>
 					<tbody>
-						{users.sort((a, b) => a.id - b.id).map((user) => (
-							<tr key={user.id}>
-								<td>{user.id}</td>
-								<td>{user.nome}</td>
-								<td>{user.email}</td>
+						{funcionarios.sort((a, b) => a.id - b.id).map((funcionario) => (
+							<tr key={funcionario.id}>
+								<td>{funcionario.id}</td>
+								<td>{funcionario.nome}</td>
+								<td>{funcionario.email}</td>
 							</tr>
 						))}
 					</tbody>

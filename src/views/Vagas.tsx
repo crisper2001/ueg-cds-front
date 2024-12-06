@@ -4,12 +4,12 @@ import { FaPencil, FaTrash } from "react-icons/fa6";
 
 export default function Vagas() {
   const [vagas, setVagas] = useState<any[]>([]);
-  const [numeroAdd, setNumeroAdd] = useState<number>();
-  const [locHorizontalAdd, setLocHorizontalAdd] = useState<number>();
-  const [locVerticalAdd, setLocVerticalAdd] = useState<number>();
-  const [numeroEdit, setNumeroEdit] = useState<number>();
-  const [locHorizontalEdit, setLocHorizontalEdit] = useState<number>();
-  const [locVerticalEdit, setLocVerticalEdit] = useState<number>();
+  const [numeroAdd, setNumeroAdd] = useState<number>(0);
+  const [locHorizontalAdd, setLocHorizontalAdd] = useState<number>(0);
+  const [locVerticalAdd, setLocVerticalAdd] = useState<number>(0);
+  const [numeroEdit, setNumeroEdit] = useState<number>(0);
+  const [locHorizontalEdit, setLocHorizontalEdit] = useState<number>(0);
+  const [locVerticalEdit, setLocVerticalEdit] = useState<number>(0);
   const [vagaBeingEdited, setVagaBeingEdited] = useState<any>(null);
 
   const fetchVagas = async () => {

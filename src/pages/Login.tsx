@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaAt, FaKey } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import UsersAPI from "../utils/UsersAPI";
+import FuncionariosAPI from "../utils/FuncionariosAPI";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -10,8 +10,8 @@ export default function Login() {
 
   // UseEffect para redirecionar para página principal caso o usuário esteja logado
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
+    const funcionario = localStorage.getItem("funcionario");
+    if (funcionario) {
       navigate("/");
     }
   }, []);
@@ -20,9 +20,9 @@ export default function Login() {
     e.preventDefault();
     if (email && password) {
       try {
-        const user = await UsersAPI.login(email, password);
-        console.log("Usuário logado com sucesso:", user);
-        localStorage.setItem("user", JSON.stringify(user));
+        const funcionario = await FuncionariosAPI.login(email, password);
+        console.log("Usuário logado com sucesso:", funcionario);
+        localStorage.setItem("funcionario", JSON.stringify(funcionario));
         navigate("/");
       } catch (error) {
         console.error("Erro ao fazer login:", error);

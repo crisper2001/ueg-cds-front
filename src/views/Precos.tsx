@@ -1,28 +1,28 @@
 import { useEffect, useState } from "react";
-import PricesAPI from "../utils/PricesAPI";
 import { FaTrash } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
+import PrecosAPI from "../utils/PrecosAPI";
 
 export default function Precos() {
   const [precos, setPrecos] = useState<any[]>([]);
-  const [tempoInicialAdd, setTempoInicialAdd] = useState<number>();
-  const [tempoAdicionalAdd, setTempoAdicionalAdd] = useState<number>();
-  const [valorInicialAdd, setValorInicialAdd] = useState<number>();
-  const [valorAdicionalAdd, setValorAdicionalAdd] = useState<number>();
-  const [tempoInicialEdit, setTempoInicialEdit] = useState<number>();
-  const [tempoAdicionalEdit, setTempoAdicionalEdit] = useState<number>();
-  const [valorInicialEdit, setValorInicialEdit] = useState<number>();
-  const [valorAdicionalEdit, setValorAdicionalEdit] = useState<number>();
+  const [tempoInicialAdd, setTempoInicialAdd] = useState<number>(0);
+  const [tempoAdicionalAdd, setTempoAdicionalAdd] = useState<number>(0);
+  const [valorInicialAdd, setValorInicialAdd] = useState<number>(0);
+  const [valorAdicionalAdd, setValorAdicionalAdd] = useState<number>(0);
+  const [tempoInicialEdit, setTempoInicialEdit] = useState<number>(0);
+  const [tempoAdicionalEdit, setTempoAdicionalEdit] = useState<number>(0);
+  const [valorInicialEdit, setValorInicialEdit] = useState<number>(0);
+  const [valorAdicionalEdit, setValorAdicionalEdit] = useState<number>(0);
   const [precoBeingEdited, setPrecoBeingEdited] = useState<any>(null);
 
   const fetchPrecos = async () => {
     try {
-      const data = await PricesAPI.getAllPrices();
+      const data = await PrecosAPI.getAllPrices();
       if (data) {
         setPrecos(data);
       }
     } catch (error) {
-      console.error('Error fetching all users:', error);
+      console.error('Error fetching all funcionarios:', error);
     }
   };
 
@@ -43,7 +43,7 @@ export default function Precos() {
         valorInicial: valorInicialAdd,
         valorAdicional: valorAdicionalAdd,
       };
-      const response = await PricesAPI.createPrice(precoData);
+      const response = await PrecosAPI.createPrice(precoData);
       if (response) {
         console.log('Preco criado com sucesso:', response);
         fetchPrecos();
@@ -67,7 +67,7 @@ export default function Precos() {
         valorInicial: valorInicialEdit,
         valorAdicional: valorAdicionalEdit,
       };
-      const response = await PricesAPI.updatePrice(precoData);
+      const response = await PrecosAPI.updatePrice(precoData);
       if (response) {
         console.log("Preco atualizado com sucesso:", response);
         fetchPrecos();
@@ -113,7 +113,7 @@ export default function Precos() {
                   </button>
                   <button className="btn btn-xs btn-ghost text-red-400" onClick={() => {
                     if (confirm(`Você tem certeza que deseja excluir o preço com ID ${preco.id}?`)) {
-                      PricesAPI.deletePrice(preco.id).then(() => {
+                      PrecosAPI.deletePrice(preco.id).then(() => {
                         fetchPrecos();
                       });
                     }

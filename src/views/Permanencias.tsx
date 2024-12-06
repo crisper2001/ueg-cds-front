@@ -1,25 +1,23 @@
 import { useEffect, useState } from "react";
 import PermanenciasAPI from "../utils/PermanenciasAPI";
-import PricesAPI from "../utils/PricesAPI";
-import UsersAPI from "../utils/UsersAPI";
 import VagasAPI from "../utils/VagasAPI";
 import { FaTrash } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
+import PrecosAPI from "../utils/PrecosAPI";
 
 export default function Permanencias() {
   const [permanencias, setPermanencias] = useState<any[]>([]);
-  const [dataHoraEntradaAdd, setDataHoraEntradaAdd] = useState<string>();
-  const [dataHoraSaidaAdd, setDataHoraSaidaAdd] = useState<string>();
-  const [placaVeiculoAdd, setPlacaVeiculoAdd] = useState<string>();
-  const [vagaIdAdd, setVagaIdAdd] = useState<number>();
-  const [funcionarioIdAdd, setFuncionarioIdAdd] = useState<number>();
-  const [precoIdAdd, setPrecoIdAdd] = useState<number>();
-  const [dataHoraEntradaEdit, setDataHoraEntradaEdit] = useState<string>();
-  const [dataHoraSaidaEdit, setDataHoraSaidaEdit] = useState<string>();
-  const [placaVeiculoEdit, setPlacaVeiculoEdit] = useState<string>();
-  const [vagaIdEdit, setVagaIdEdit] = useState<number>();
-  const [funcionarioIdEdit, setFuncionarioIdEdit] = useState<number>();
-  const [precoIdEdit, setPrecoIdEdit] = useState<number>();
+  const [dataHoraEntradaAdd, setDataHoraEntradaAdd] = useState<string>('');
+  const [dataHoraSaidaAdd, setDataHoraSaidaAdd] = useState<string>('');
+  const [placaVeiculoAdd, setPlacaVeiculoAdd] = useState<string>('');
+  const [vagaIdAdd, setVagaIdAdd] = useState<number>(0);
+  const [precoIdAdd, setPrecoIdAdd] = useState<number>(0);
+  const [dataHoraEntradaEdit, setDataHoraEntradaEdit] = useState<string>('');
+  const [dataHoraSaidaEdit, setDataHoraSaidaEdit] = useState<string>('');
+  const [placaVeiculoEdit, setPlacaVeiculoEdit] = useState<string>('');
+  const [vagaIdEdit, setVagaIdEdit] = useState<number>(0);
+  const [funcionarioIdEdit, setFuncionarioIdEdit] = useState<number>(0);
+  const [precoIdEdit, setPrecoIdEdit] = useState<number>(0);
   const [vagas, setVagas] = useState<any[]>([]);
   const [precos, setPrecos] = useState<any[]>([]);
   const [permanenciaBeingEdited, setPermanenciaBeingEdited] = useState<any>(null);
@@ -48,7 +46,7 @@ export default function Permanencias() {
 
   const fetchPrecos = async () => {
     try {
-      const data = await PricesAPI.getAllPrices();
+      const data = await PrecosAPI.getAllPrices();
       if (data) {
         setPrecos(data);
       }
@@ -69,7 +67,7 @@ export default function Permanencias() {
       alert("Preencha todos os campos");
       return;
     }
-    const funcionarioId = JSON.parse(localStorage.getItem('user') || '{}').id;
+    const funcionarioId = JSON.parse(localStorage.getItem('funcionario') || '{}').id;
     try {
       const permanenciaData = {
         dataHoraEntrada: dataHoraEntradaAdd,

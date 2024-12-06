@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react";
 import { FaAt, FaKey, FaUser } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
-import UsersAPI from "../utils/UsersAPI";
-// import UsersAPI from "../utils/UsersAPI";
+import FuncionariosAPI from "../utils/FuncionariosAPI";
 
 export default function SignUp() {
-  const [username, setUsername] = useState("");
+  const [nome, setnome] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   // UseEffect para redirecionar para página principal caso o usuário esteja logado
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
+    const funcionario = localStorage.getItem("funcionario");
+    if (funcionario) {
       navigate("/");
     }
   }, []);
@@ -21,11 +20,11 @@ export default function SignUp() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (username && email && password) {
+    if (nome && email && password) {
       try {
-        const userData = { nome: username, email, senha: password };
-        await UsersAPI.createUser(userData);
-        console.log("Usuário criado com sucesso:", userData);
+        const funcionarioData = { nome: nome, email, senha: password };
+        await FuncionariosAPI.createFuncionario(funcionarioData);
+        console.log("Usuário criado com sucesso:", funcionarioData);
         navigate("/");
       } catch (error) {
         console.error("Erro ao criar usuário:", error);
@@ -50,8 +49,8 @@ export default function SignUp() {
                 type="text"
                 className="grow"
                 placeholder="Nome"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={nome}
+                onChange={(e) => setnome(e.target.value)}
                 required
               />
             </label>

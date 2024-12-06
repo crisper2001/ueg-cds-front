@@ -5,7 +5,7 @@ import Funcionarios from "../views/Funcionarios";
 import Precos from "../views/Precos";
 import Vagas from "../views/Vagas";
 import Permanencias from "../views/Permanencias";
-import UsersAPI from "../utils/UsersAPI";
+import FuncionariosAPI from "../utils/FuncionariosAPI";
 import Dashboard from "../views/Dashboard";
 
 export default function Home() {
@@ -15,13 +15,13 @@ export default function Home() {
 
   // UseEffect para redirecionar para página de login caso o usuário não esteja logado ou não exista mais
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (!user) {
+    const funcionario = localStorage.getItem("funcionario");
+    if (!funcionario) {
       navigate("/login");
     } else {
-      UsersAPI.getUser(JSON.parse(user).id).catch((error) => {
+      FuncionariosAPI.getFuncionario(JSON.parse(funcionario).id).catch((error) => {
         if (error.response.status === 404) {
-          localStorage.removeItem("user");
+          localStorage.removeItem("funcionario");
         }
         navigate("/login");
       });
@@ -30,12 +30,12 @@ export default function Home() {
 
   // Função para sair da conta
   const handleLogout = () => {
-    localStorage.removeItem("user");
+    localStorage.removeItem("funcionario");
     navigate("/login");
   };
 
   return (
-    localStorage.getItem("user") && (
+    localStorage.getItem("funcionario") && (
       <>
         {/* Barra de navegação */}
         <div className="navbar bg-base-200 fixed top-0 left-0 right-0 z-50">
@@ -60,13 +60,13 @@ export default function Home() {
           <div className="navbar-end">
             <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className="btn btn-primary text-white rounded-full size-12">
-                <span className="text-2xl">{JSON.parse(localStorage.getItem('user') || '{}').nome[0]}</span>
+                <span className="text-2xl">{JSON.parse(localStorage.getItem('funcionario') || '{}').nome[0]}</span>
               </div>
               <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 m-1 shadow">
                 <li className="p-2">
-                  {JSON.parse(localStorage.getItem('user') || '{}').nome}
+                  {JSON.parse(localStorage.getItem('funcionario') || '{}').nome}
                   <br />
-                  {JSON.parse(localStorage.getItem('user') || '{}').email}
+                  {JSON.parse(localStorage.getItem('funcionario') || '{}').email}
                 </li>
                 <hr />
                 <li className="p-2">

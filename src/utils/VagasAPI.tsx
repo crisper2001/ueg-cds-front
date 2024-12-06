@@ -5,6 +5,7 @@ const BASE_URL = 'http://localhost:8080/vagas';
 const VagasAPI = {
   createVaga: async ({numero, locHorizontal, locVertical}: {numero: number, locHorizontal: number, locVertical: number}) => {
     try {
+      console.log({numero, locHorizontal, locVertical});
       const response = await axios.post(BASE_URL, {numero, locHorizontal, locVertical});
       return response.data;
     } catch (error) {
@@ -18,6 +19,9 @@ const VagasAPI = {
       const response = await axios.get(`${BASE_URL}/${id}`);
       return response.data;
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return null;
+      }
       console.error('Error fetching vaga:', error);
       throw error;
     }
@@ -48,6 +52,9 @@ const VagasAPI = {
       const response = await axios.get(BASE_URL);
       return response.data;
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return [];
+      }
       console.error('Error fetching all vagas:', error);
       throw error;
     }

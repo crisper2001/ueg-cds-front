@@ -18,6 +18,9 @@ const PermanenciasAPI = {
       const response = await axios.get(`${BASE_URL}/${id}`);
       return response.data;
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return null;
+      }
       console.error('Error fetching permanencia:', error);
       throw error;
     }
@@ -48,6 +51,9 @@ const PermanenciasAPI = {
       const response = await axios.get(BASE_URL);
       return response.data;
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return [];
+      }
       console.error('Error fetching all permanencias:', error);
       throw error;
     }

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const BASE_URL = 'http://localhost:8080/precos';
 
-const PricesAPI = {
+const PrecosAPI = {
   createPrice: async ({tempoInicial, tempoAdicional, valorInicial, valorAdicional}: {tempoInicial: number, tempoAdicional: number, valorInicial: number, valorAdicional: number}) => {
     try {
       const response = await axios.post(BASE_URL, {tempoInicial, tempoAdicional, valorInicial, valorAdicional});
@@ -18,7 +18,23 @@ const PricesAPI = {
       const response = await axios.get(`${BASE_URL}/${id}`);
       return response.data;
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return null;
+      }
       console.error('Error fetching price:', error);
+      throw error;
+    }
+  },
+
+  getAllPrices: async () => {
+    try {
+      const response = await axios.get(BASE_URL);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return [];
+      }
+      console.error('Error fetching all prices:', error);
       throw error;
     }
   },
@@ -43,16 +59,7 @@ const PricesAPI = {
     }
   },
 
-  getAllPrices: async () => {
-    try {
-      const response = await axios.get(BASE_URL);
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching all prices:', error);
-      throw error;
-    }
-  }
 };
 
-export default PricesAPI;
+export default PrecosAPI;
 

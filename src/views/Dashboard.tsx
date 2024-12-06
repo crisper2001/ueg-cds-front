@@ -46,7 +46,7 @@ export default function Dashboard() {
 	return (
 		<div className="flex flex-col items-center justify-center gap-4">
 			<div className="text-center">
-				<p className="text-2xl">Bem-vindo, {JSON.parse(localStorage.getItem('user') || '{}').nome}!</p>
+				<p className="text-2xl">Bem-vindo, {JSON.parse(localStorage.getItem('funcionario') || '{}').nome}!</p>
 				<p className="text-lg">Hoje é {currentDate}. São {currentTime}.</p>
 			</div>
 			{vagas.length > 0 ? (
