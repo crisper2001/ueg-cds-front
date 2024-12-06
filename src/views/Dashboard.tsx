@@ -14,6 +14,7 @@ export default function Dashboard() {
   const [vagaNumero, setVagaNumero] = useState<number>(0);
   const [dataHoraEntrada, setDataHoraEntrada] = useState<string>(new Date().toISOString());
   const [precos, setPrecos] = useState<any[]>([]);
+  const [permanenciaSaida, setPermanenciaSaida] = useState<any>(null);
 
   const fetchPrecos = async () => {
     try {
@@ -89,7 +90,6 @@ export default function Dashboard() {
           fetchVagas();
           (document.getElementById("entrada") as HTMLDialogElement)?.close();
           (document.getElementById("entrada_sucesso") as HTMLDialogElement)?.showModal();
-
         }
       } else {
         alert('Não há vagas disponíveis');
@@ -99,7 +99,33 @@ export default function Dashboard() {
     }
   };
 
-  const handleGerarBilhete = () => {
+  const handleSaida = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const permanencias = await PermanenciasAPI.getAllPermanencias();
+      const permanencia = permanencias.find((p: any) => p.placaVeiculo === placaVeiculo && !p.dataHoraSaida);
+      if (permanencia) {
+        const permanenciaData = {
+          ...permanencia,
+          dataHoraSaida: new Date().toISOString(),
+        };
+        console.log(permanenciaData);
+        const response = await PermanenciasAPI.updatePermanencia(permanenciaData);
+        if (response) {
+          setPermanenciaSaida(response);
+          fetchVagas();
+          (document.getElementById("saida") as HTMLDialogElement)?.close();
+          (document.getElementById("saida_sucesso") as HTMLDialogElement)?.showModal();
+        }
+      } else {
+        alert('Permanência não encontrada');
+      }
+    } catch (error) {
+      console.error('Error updating permanencia:', error);
+    }
+  };
+
+  const handleGerarBilheteEntrada = () => {
     const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a7", putOnlyUsedFonts: true });
 
     doc.setFont("Helvetica", "normal");
@@ -127,10 +153,58 @@ export default function Dashboard() {
 
     doc.text("Obrigado por utilizar nosso estacionamento!", 10, 45);
 
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${placaVeiculo}`;
+    doc.addImage(qrCodeUrl, "PNG", 10, 50, 30, 30);
+
     const dateTimeString = new Date().toISOString().replace(/[-:]/g, "").slice(0, 15);
     doc.save(`bilhete_${vagaNumero}_${placaVeiculo}_${dateTimeString}.pdf`);
 
     (document.getElementById("entrada_sucesso") as HTMLDialogElement)?.close();
+  };
+
+  const handleGerarBilheteSaida = () => {
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a7", putOnlyUsedFonts: true });
+
+    doc.setFont("Helvetica", "normal");
+    doc.setFontSize(8);
+
+    doc.text("ESTACIONAMENTO", 10, 10);
+
+    doc.text(`Vaga: ${vagaNumero}`, 10, 15);
+    doc.text(`Placa: ${permanenciaSaida.placaVeiculo}`, 10, 20);
+    const entradaDate = new Date(permanenciaSaida.dataHoraEntrada);
+    const formattedEntrada = `${entradaDate.getDate().toString().padStart(2, '0')}/${(entradaDate.getMonth() + 1).toString().padStart(2, '0')}/${entradaDate.getFullYear()}, ${entradaDate.getHours().toString().padStart(2, '0')}:${entradaDate.getMinutes().toString().padStart(2, '0')}`;
+
+    const saidaDate = new Date(permanenciaSaida.dataHoraSaida);
+    const formattedSaida = `${saidaDate.getDate().toString().padStart(2, '0')}/${(saidaDate.getMonth() + 1).toString().padStart(2, '0')}/${saidaDate.getFullYear()}, ${saidaDate.getHours().toString().padStart(2, '0')}:${saidaDate.getMinutes().toString().padStart(2, '0')}`;
+
+    doc.text(`Entrada: ${formattedEntrada}`, 10, 25);
+    doc.text(`Saída: ${formattedSaida}`, 10, 30);
+
+    if (precos.length > 0) {
+      const { tempoInicial, valorInicial, valorAdicional, tempoAdicional } = precos[precos.length - 1];
+      const permanenciaHoras = Math.ceil((saidaDate.getTime() - entradaDate.getTime()) / (1000 * 60 * 60));
+      const valorTotal = valorInicial + Math.max(0, (permanenciaHoras - tempoInicial / 60) * (valorAdicional / (tempoAdicional / 60)));
+
+      doc.text(`Tempo Inicial: ${tempoInicial} minutos com valor R$ ${valorInicial}`, 10, 35);
+      doc.text(`Tempo Adicional: R$ ${valorAdicional} a cada ${tempoAdicional} minutos`, 10, 40);
+      doc.text(`Valor Total: R$ ${valorTotal.toFixed(2)}`, 10, 45);
+    } else {
+      doc.text("Preço: nenhum", 10, 35);
+    }
+
+    doc.setDrawColor(0);
+    doc.line(5, 50, 70, 50);
+
+    doc.text("Obrigado por utilizar nosso estacionamento!", 10, 55);
+
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=PIX`;
+    doc.addImage(qrCodeUrl, "PNG", 10, 60, 30, 30);
+
+    const dateTimeString = new Date().toISOString().replace(/[-:]/g, "").slice(0, 15);
+    doc.save(`bilhete_saida_${vagaNumero}_${permanenciaSaida.placaVeiculo}_${dateTimeString}.pdf`);
+
+    (document.getElementById("saida_sucesso") as HTMLDialogElement)?.close();
   };
 
   return (
@@ -170,7 +244,7 @@ export default function Dashboard() {
               + Registrar Entrada
             </button>
 
-            <button className="btn btn-secondary text-white">
+            <button className="btn btn-secondary text-white" onClick={() => (document.getElementById('saida') as HTMLDialogElement).showModal()}>
               + Registrar Saída
             </button>
           </div>
@@ -219,7 +293,7 @@ export default function Dashboard() {
           <p><b>Vaga:</b> {vagaNumero}</p>
           <p><b>Data:</b> {new Date(dataHoraEntrada).toLocaleDateString('pt-BR')}</p>
           <p><b>Horário:</b> {new Date(dataHoraEntrada).toLocaleTimeString('pt-BR')}</p>
-          <button className="btn btn-primary text-white w-2/3 mx-auto flex items-center justify-center mt-4" onClick={handleGerarBilhete}>
+          <button className="btn btn-primary text-white w-2/3 mx-auto flex items-center justify-center mt-4" onClick={handleGerarBilheteEntrada}>
             Gerar Bilhete
           </button>
         </div>
@@ -228,7 +302,7 @@ export default function Dashboard() {
       <dialog id="saida" className="modal">
         <div className="modal-box w-96">
           <h3 className="font-bold text-lg pb-4">Registrar Saída</h3>
-          <form className="flex flex-col gap-4" onSubmit={handleEntrada}>
+          <form className="flex flex-col gap-4" onSubmit={handleSaida}>
             <div>
               <label htmlFor="placa_add" className="label">
                 Placa do Veículo
@@ -259,12 +333,14 @@ export default function Dashboard() {
       <dialog id="saida_sucesso" className="modal">
         <div className="modal-box w-96">
           <h3 className="font-bold text-lg pb-4">Saída Registrada com Sucesso</h3>
-          <p><b>Placa:</b> {placaVeiculo}</p>
-          <p><b>Vaga:</b> {vagaNumero}</p>
-          <p><b>Data:</b> {new Date(dataHoraEntrada).toLocaleDateString('pt-BR')}</p>
-          <p><b>Horário:</b> {new Date(dataHoraEntrada).toLocaleTimeString('pt-BR')}</p>
-          <button className="btn btn-primary text-white w-2/3 mx-auto flex items-center justify-center mt-4" onClick={() => (document.getElementById("saida_sucesso") as HTMLDialogElement)?.close()}>
-            Gerar Bilhete
+          <p><b>Placa:</b> {permanenciaSaida?.placaVeiculo}</p>
+          <p><b>Valor:</b> {permanenciaSaida?.valor}</p>
+          <p><b>Data de Entrada:</b> {new Date(permanenciaSaida?.dataHoraEntrada).toLocaleDateString('pt-BR')}</p>
+          <p><b>Horário de Entrada:</b> {new Date(permanenciaSaida?.dataHoraEntrada).toLocaleTimeString('pt-BR')}</p>
+          <p><b>Data de Saída:</b> {new Date(permanenciaSaida?.dataHoraSaida).toLocaleDateString('pt-BR')}</p>
+          <p><b>Horário de Saída:</b> {new Date(permanenciaSaida?.dataHoraSaida).toLocaleTimeString('pt-BR')}</p>
+          <button className="btn btn-primary text-white w-2/3 mx-auto flex items-center justify-center mt-4" onClick={handleGerarBilheteSaida}>
+            Gerar Boleto
           </button>
         </div>
       </dialog>
