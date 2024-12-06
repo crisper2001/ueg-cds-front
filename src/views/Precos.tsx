@@ -45,7 +45,7 @@ export default function Precos() {
       };
       const response = await PrecosAPI.createPrice(precoData);
       if (response) {
-        console.log('Preco criado com sucesso:', response);
+        alert('Preço criado com sucesso');
         fetchPrecos();
       }
     } catch (error) {
@@ -55,7 +55,7 @@ export default function Precos() {
 
   const handleEditPreco = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (tempoInicialEdit === undefined || tempoAdicionalEdit === undefined || valorInicialEdit === undefined || valorAdicionalEdit === undefined) {
+    if (!tempoInicialEdit || !tempoAdicionalEdit || !valorInicialEdit || !valorAdicionalEdit) {
       alert("Preencha todos os campos");
       return;
     }
@@ -69,9 +69,9 @@ export default function Precos() {
       };
       const response = await PrecosAPI.updatePrice(precoData);
       if (response) {
-        console.log("Preco atualizado com sucesso:", response);
-        fetchPrecos();
         (document.getElementById("edit_preco") as HTMLDialogElement)?.close();
+        alert("Preço atualizado com sucesso");
+        fetchPrecos();
       }
     } catch (error) {
       console.error("Error updating preco:", error);
@@ -87,8 +87,8 @@ export default function Precos() {
               <th>ID</th>
               <th>Tempo Inicial (min)</th>
               <th>Tempo Adicional (min)</th>
-              <th>Valor Inicial (R$)</th>
-              <th>Valor Adicional (R$)</th>
+              <th>Valor Inicial</th>
+              <th>Valor Adicional</th>
               <th></th>
             </tr>
           </thead>
@@ -98,8 +98,8 @@ export default function Precos() {
                 <td>{preco.id}</td>
                 <td>{preco.tempoInicial}</td>
                 <td>{preco.tempoAdicional}</td>
-                <td>{preco.valorInicial}</td>
-                <td>{preco.valorAdicional}</td>
+                <td>{preco.valorInicial.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                <td>{preco.valorAdicional.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
                 <td>
                   <button className="btn btn-xs btn-ghost" onClick={() => {
                     (document.getElementById("edit_preco") as HTMLDialogElement)?.showModal();

@@ -29,7 +29,7 @@ export default function Vagas() {
 
   const handleAddVaga = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (numeroAdd === undefined || locHorizontalAdd === undefined || locVerticalAdd === undefined) {
+    if (!numeroAdd || !locHorizontalAdd || !locVerticalAdd) {
       alert("Preencha todos os campos");
       return;
     }
@@ -41,7 +41,7 @@ export default function Vagas() {
       };
       const response = await VagasAPI.createVaga(vagaData);
       if (response) {
-        console.log("Vaga criada com sucesso:", response);
+        alert("Vaga criada com sucesso");
         fetchVagas();
       }
     } catch (error) {
@@ -64,9 +64,9 @@ export default function Vagas() {
       };
       const response = await VagasAPI.updateVaga(vagaData);
       if (response) {
-        console.log("Vaga atualizada com sucesso:", response);
-        fetchVagas();
         (document.getElementById("edit_vaga") as HTMLDialogElement)?.close();
+        alert("Vaga atualizada com sucesso");
+        fetchVagas();
       }
     } catch (error) {
       console.error("Error updating vaga:", error);
