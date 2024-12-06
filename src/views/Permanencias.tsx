@@ -91,6 +91,7 @@ export default function Permanencias() {
         precoId: precoIdAdd,
         dataHoraSaida: dataHoraSaidaAdd ?? undefined,
       };
+      console.log(permanenciaData);
       const response = await PermanenciasAPI.createPermanencia(permanenciaData);
       if (response) {
         alert('Permanência criada com sucesso');
@@ -146,8 +147,8 @@ export default function Permanencias() {
             {permanencias.sort((a, b) => a.id - b.id).map((permanencia) => (
               <tr key={permanencia.id}>
                 <td>{permanencia.id}</td>
-                <td>{new Date(permanencia.dataHoraEntrada).toLocaleString('pt-BR', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
-                <td>{permanencia.dataHoraSaida ? new Date(permanencia.dataHoraSaida).toLocaleString('pt-BR', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
+                <td>{new Date(new Date(permanencia.dataHoraEntrada).getTime() - 3 * 60 * 60 * 1000).toLocaleString('pt-BR', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
+                <td>{permanencia.dataHoraSaida ? new Date(new Date(permanencia.dataHoraSaida).getTime() - 3 * 60 * 60 * 1000).toLocaleString('pt-BR', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
                 <td>{permanencia.placaVeiculo}</td>
                 <td>{Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(permanencia.valor)}</td>
                 <td>
