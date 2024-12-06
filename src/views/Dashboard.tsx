@@ -73,6 +73,16 @@ export default function Dashboard() {
 						<span>Vagas ocupadas: {vagas.filter(vaga => vaga.isOcupada).length}</span>
 						<span>Total de vagas: {vagas.length}</span>
 					</div>
+
+          <div className="flex gap-2">
+            <button className="btn btn-primary text-white">
+              + Registrar Entrada
+            </button>
+
+            <button className="btn btn-secondary text-white">
+              + Registrar Saída
+            </button>
+          </div>
 				</>
 			) : (
 				<div className="text-lg text-center">
