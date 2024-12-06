@@ -94,6 +94,7 @@ export default function Permanencias() {
       console.log(permanenciaData);
       const response = await PermanenciasAPI.createPermanencia(permanenciaData);
       if (response) {
+        (document.getElementById("add_permanencia") as HTMLDialogElement)?.close();
         alert('Permanência criada com sucesso');
         fetchPermanencias();
       }

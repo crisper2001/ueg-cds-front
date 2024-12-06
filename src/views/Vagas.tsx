@@ -39,8 +39,16 @@ export default function Vagas() {
         locHorizontal: locHorizontalAdd,
         locVertical: locVerticalAdd,
       };
-      const response = await VagasAPI.createVaga(vagaData);
+      const allVagas = await VagasAPI.getAllVagas();
+      const response = allVagas.find((vaga: { locHorizontal: number; locVertical: number }) =>
+        vaga.locHorizontal === vagaData.locHorizontal && vaga.locVertical === vagaData.locVertical);
       if (response) {
+        alert("Já existe uma vaga com a localização escolhida. Por favor, escolha outra localização.");
+        return;
+      }
+      const response2 = await VagasAPI.createVaga(vagaData);
+      if (response2) {
+        (document.getElementById("add_vaga") as HTMLDialogElement)?.close();
         alert("Vaga criada com sucesso");
         fetchVagas();
       }
@@ -62,8 +70,15 @@ export default function Vagas() {
         locHorizontal: locHorizontalEdit,
         locVertical: locVerticalEdit,
       };
-      const response = await VagasAPI.updateVaga(vagaData);
+      const allVagas = await VagasAPI.getAllVagas();
+      const response = allVagas.find((vaga: { locHorizontal: number; locVertical: number }) =>
+        vaga.locHorizontal === vagaData.locHorizontal && vaga.locVertical === vagaData.locVertical);
       if (response) {
+        alert("Já existe uma vaga com a localização escolhida. Por favor, escolha outra localização.");
+        return;
+      }
+      const response2 = await VagasAPI.updateVaga(vagaData);
+      if (response2) {
         (document.getElementById("edit_vaga") as HTMLDialogElement)?.close();
         alert("Vaga atualizada com sucesso");
         fetchVagas();
@@ -81,8 +96,8 @@ export default function Vagas() {
             <tr className="bg-base-200">
               <th>ID</th>
               <th>Número</th>
-              <th>Localização Horizontal</th>
-              <th>Localização Vertical</th>
+              <th>Linha</th>
+              <th>Coluna</th>
               <th>Ocupada?</th>
               <td></td>
             </tr>
@@ -113,7 +128,7 @@ export default function Vagas() {
                     }
                   }}>
                     <FaTrash />
-                    </button>
+                  </button>
                 </td>
               </tr>
             ))}
@@ -207,7 +222,7 @@ export default function Vagas() {
             </div>
             <div>
               <label htmlFor="loc_horizontal_edit" className="label">
-                Localização Horizontal
+                Linha
               </label>
               <input
                 type="number"
@@ -220,7 +235,7 @@ export default function Vagas() {
             </div>
             <div>
               <label htmlFor="loc_vertical_edit" className="label">
-                Localização Vertical
+                Coluna
               </label>
               <input
                 type="number"

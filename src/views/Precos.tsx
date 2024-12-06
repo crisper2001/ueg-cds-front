@@ -45,6 +45,7 @@ export default function Precos() {
       };
       const response = await PrecosAPI.createPrice(precoData);
       if (response) {
+        (document.getElementById("add_preco") as HTMLDialogElement)?.close();
         alert('Preço criado com sucesso');
         fetchPrecos();
       }
